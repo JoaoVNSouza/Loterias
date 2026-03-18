@@ -97,9 +97,11 @@ try:
     df.reset_index(drop=True, inplace=True)
 
 
-except FileNotFoundError:
+# except FileNotFoundError:
+except Exception as e:
     df = pd.DataFrame()
-    st.warning("Arquivo de resultados não encontrado.")
+    st.error(f"Erro ao carregar dados: {e}")
+
 
 
 # Escolha dos números
