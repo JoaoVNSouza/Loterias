@@ -14,12 +14,13 @@ import pandas as pd
 import os
 import sqlite3
 from datetime import datetime
+from oracle import baixar_excel_bucket
 
 # Constantes
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "db.sqlite3")
 # RESULTADOS_DIR = os.path.join(BASE_DIR, "resultados")  # Local
-RESULTADOS_DIR = "/app/resultados"
+# RESULTADOS_DIR = "/app/resultados"
 LOTERIAS = {
     "megasena": {
         "total": 60,
@@ -36,6 +37,7 @@ LOTERIAS = {
         'bolas_sorteadas': 15
     }
 }
+
 
 if "numeros_selecionados" not in st.session_state:
     st.session_state.numeros_selecionados = set()
@@ -85,19 +87,28 @@ colunas = config["colunas"]
 bolas_sorteadas = config['bolas_sorteadas']
 
 
-# Importar dados.
-try:
-    df = pd.read_excel(
+@st.cache_data(ttl=3600)  # 1 hora
+def carregar_dados(loteria):
+    if loteria == 'lotofacil':
+        baixar_excel_bucket("lotofacil_resultados.xlsx", "lotofacil.xlsx")
+        arquivo = "lotofacil.xlsx"
+    else:
+        baixar_excel_bucket("megasena_resultados.xlsx", "megasena.xlsx")
+        arquivo = "megasena.xlsx"
 
-        # 500 últimos resultados
-        f'{RESULTADOS_DIR}/{loteria}_resultados.xlsx', engine='openpyxl')[5:507]
-    # Definir linha 0 como cabeçalho
+    df = pd.read_excel(arquivo, engine='openpyxl')[5:507]
+
     df.columns = df.iloc[0]
     df = df[1:]
-    # Data somente data
     df['Data'] = pd.to_datetime(df['Data'], dayfirst=True)
     df.reset_index(drop=True, inplace=True)
 
+    return df
+
+
+# Importar dados.
+try:
+    df = carregar_dados(loteria)
 
 # except FileNotFoundError:
 except Exception as e:
