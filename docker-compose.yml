@@ -6,3 +6,5 @@ services:
       context: ./
     ports:
       - "5005:8501"
+    volumes:
+      - ./resultados:/app/resultados

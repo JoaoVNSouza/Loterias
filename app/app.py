@@ -18,6 +18,8 @@ from datetime import datetime
 # Constantes
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "db.sqlite3")
+# RESULTADOS_DIR = os.path.join(BASE_DIR, "resultados")  # Local
+RESULTADOS_DIR = "/app/resultados"
 LOTERIAS = {
     "megasena": {
         "total": 60,
@@ -88,7 +90,7 @@ try:
     df = pd.read_excel(
 
         # 500 últimos resultados
-        f'{BASE_DIR}/resultados/{loteria}_resultados.xlsx', engine='openpyxl')[5:507]
+        f'{RESULTADOS_DIR}/{loteria}_resultados.xlsx', engine='openpyxl')[5:507]
     # Definir linha 0 como cabeçalho
     df.columns = df.iloc[0]
     df = df[1:]
