@@ -5,4 +5,4 @@ venv/
 staticfiles/" > .gitignore
 MegaSena*/
 OracleBucket
-*.xlsx
+#*.xlsx
