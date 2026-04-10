@@ -1,11 +1,8 @@
-version: "3.9"
-
 services:
-  loterias:
-    build:
-      context: .
-      dockerfile: .dockerfile
+  streamlit:
     container_name: loterias
-    restart: always
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
     ports:
-      - "8501:8501"
+      - "5005:8501"

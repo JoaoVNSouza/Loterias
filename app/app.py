@@ -88,7 +88,7 @@ try:
     df = pd.read_excel(
 
         # 500 últimos resultados
-        f'resultados/{loteria}_resultados.xlsx', engine='openpyxl')[5:507]
+        f'{BASE_DIR}/resultados/{loteria}_resultados.xlsx', engine='openpyxl')[5:507]
     # Definir linha 0 como cabeçalho
     df.columns = df.iloc[0]
     df = df[1:]
@@ -101,7 +101,6 @@ try:
 except Exception as e:
     df = pd.DataFrame()
     st.error(f"Erro ao carregar dados: {e}")
-
 
 
 # Escolha dos números
@@ -283,7 +282,7 @@ if st.session_state.jogos_selecionados:
                         count += 1
                 df_resultados.loc[i, f'Acertos jogo {id}'] = count
 
-        st.dataframe(df_resultados, use_container_width=True, hide_index=True)
+        st.dataframe(df_resultados, width='stretch', hide_index=True)
 
     with col2:
 
