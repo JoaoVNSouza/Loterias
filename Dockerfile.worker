@@ -1,0 +1,24 @@
+FROM python:3.9-slim
+WORKDIR /app
+COPY baixar_resultados.py /app
+# Instala dependências + cron + playwright deps
+RUN apt-get update && apt-get install -y \
+    cron \
+    wget \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir playwright pandas requests
+
+# Instala browsers do Playwright
+RUN playwright install --with-deps
+# Cria o cron job (20:30 todos os dias)
+RUN echo "30 20 * * * python /app/baixar_resultados.py >> /var/log/cron.log 2>&1" > /etc/cron.d/worker-cron
+RUN chmod 0644 /etc/cron.d/worker-cron
+RUN crontab /etc/cron.d/worker-cron
+
+ENV TZ=America/Campo_Grande
+RUN apt-get update && apt-get install -y tzdata
+
+# Mantém o container rodando
+CMD ["sh", "-c", "cron && tail -f /var/log/cron.log"]
+

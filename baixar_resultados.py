@@ -3,10 +3,11 @@ from pathlib import Path
 
 
 url_base = 'https://asloterias.com.br/download-todos-resultados-'
+RESULTADOS_DIR = "/app/resultados"
 
 
 def baixar_resultados(loteria: str = 'lotofacil') -> None:
-    Path("resultados").mkdir(exist_ok=True)
+    Path(RESULTADOS_DIR).mkdir(exist_ok=True)
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -24,7 +25,7 @@ def baixar_resultados(loteria: str = 'lotofacil') -> None:
 
         if loteria == 'mega-sena':
             loteria = 'megasena'
-        caminho = f'./resultados/{loteria}_resultados.xlsx'
+        caminho = f'{RESULTADOS_DIR}/{loteria}_resultados.xlsx'
         download.save_as(caminho)
 
         print(f"Download concluído: {caminho}")
