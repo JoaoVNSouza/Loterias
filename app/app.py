@@ -366,3 +366,7 @@ if st.session_state.jogos_selecionados:
             valor_total += valor_jogo
 
         st.write(f"Valor total: R$ {valor_total:.2f}")
+
+st.divider()
+st.write('20 Últimos concursos:')
+st.dataframe(df.head(20), width='stretch', hide_index=True)
